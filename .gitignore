@@ -61,5 +61,5 @@ cabal.project.local.bak
 *.tix
 
 # --- Environment ---
-.direnv
+.direnv/
 Session.vim
