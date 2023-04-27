@@ -59,6 +59,7 @@ cabal.project.local.bak
 *.hp
 *.eventlog
 *.tix
+*.db
 
 # --- Environment ---
 .direnv/
