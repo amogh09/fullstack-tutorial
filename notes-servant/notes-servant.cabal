@@ -1,0 +1,55 @@
+cabal-version:   3.0
+name:            notes-servant
+version:         0.1.0.0
+
+-- synopsis:
+-- description:
+license:         MIT
+license-file:    LICENSE
+author:          Amogh Rathore
+maintainer:      amoghdroid09@gmail.com
+
+-- copyright:
+category:        Tutorial
+build-type:      Simple
+extra-doc-files: CHANGELOG.md
+
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  MyLib
+
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        , aeson                ^>=2.1.1.0
+        , base                 ^>=4.16.3.0
+        , bytestring           ^>=0.11.3.1
+        , cookie               ^>=0.4.6
+        , servant              ^>=0.19.1
+        , servant-auth         ^>=0.4.1.0
+        , servant-auth-server  ^>=0.4.7.0
+        , servant-server       ^>=0.19.2
+        , text                 ^>=2.0.1
+        , warp                 ^>=3.3.23
+
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable notes-servant
+    import:           warnings
+    main-is:          Main.hs
+
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        , base           ^>=4.16.3.0
+        , notes-servant
+        , warp           ^>=3.3.23
+
+    hs-source-dirs:   app
+    default-language: Haskell2010

@@ -1,0 +1,66 @@
+# --- JS ---
+# dependencies
+**/node_modules/
+.pnp
+.pnp.js
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# build output
+**/build/
+
+# misc
+.DS_Store
+*.log
+
+# testing
+**/coverage/
+**/.nyc_output/
+
+# --- Haskell ---
+# build output
+**/dist/
+**/dist-newstyle/
+
+# misc
+**/.cabal-sandbox/
+**/.cabal/
+cabal.project.local
+*.o
+*.hi
+*.aux
+*.hp
+*.prof
+*.dyn_o
+*.dyn_hi
+**/.hpc/
+**/dist/
+**/dist-newstyle/
+**/.stack-work/
+**/.stack-work-impl/
+cabal.project.local~
+cabal.project.freeze
+cabal.project.local~
+cabal.project.user~
+cabal.project.snapshot
+cabal.project.snapshot~
+cabal.project.local.bak
+*.o
+*.hi
+*.dyn_o
+*.dyn_hi
+*.chi
+*.chs.h
+*.hsc.h
+*.prof
+*.aux
+*.hp
+*.eventlog
+*.tix
+*.db
+
+# --- Environment ---
+.direnv/
+Session.vim
