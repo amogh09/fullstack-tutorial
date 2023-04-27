@@ -1,6 +1,6 @@
 # --- JS ---
 # dependencies
-/node_modules
+**/node_modules/
 .pnp
 .pnp.js
 yarn.lock
@@ -9,24 +9,24 @@ yarn-debug.log*
 yarn-error.log*
 
 # build output
-/build
+**/build/
 
 # misc
 .DS_Store
 *.log
 
 # testing
-/coverage
-/.nyc_output
+**/coverage/
+**/.nyc_output/
 
 # --- Haskell ---
 # build output
-/dist
-/dist-newstyle
+**/dist/
+**/dist-newstyle/
 
 # misc
-.cabal-sandbox/
-.cabal/
+**/.cabal-sandbox/
+**/.cabal/
 cabal.project.local
 *.o
 *.hi
@@ -35,11 +35,11 @@ cabal.project.local
 *.prof
 *.dyn_o
 *.dyn_hi
-.hpc/
-dist/
-dist-newstyle/
-.stack-work/
-.stack-work-impl/
+**/.hpc/
+**/dist/
+**/dist-newstyle/
+**/.stack-work/
+**/.stack-work-impl/
 cabal.project.local~
 cabal.project.freeze
 cabal.project.local~
