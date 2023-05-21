@@ -7,10 +7,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module MyLib (mkApp) where
 
-import Control.Concurrent (MVar, modifyMVar, newMVar, readMVar)
+import Control.Concurrent (MVar, modifyMVar, modifyMVar_, newMVar, readMVar)
 import Control.Monad.IO.Class (liftIO)
 import Data.Aeson
 import Data.Text.Lazy (Text)
@@ -18,6 +19,7 @@ import Data.Text.Lazy.Encoding (decodeUtf8)
 import GHC.Generics (Generic)
 import Servant
 import Servant.Auth.Server (Auth, AuthResult (Authenticated), FromJWT, JWT, JWTSettings, ThrowAll (throwAll), ToJWT, cookieIsSecure, cookieXsrfSetting, defaultCookieSettings, defaultJWTSettings, generateKey, makeJWT)
+import System.Environment (getArgs)
 import Prelude hiding (id)
 
 data Note = Note {id :: Int, content :: Text, important :: Bool}
@@ -89,6 +91,10 @@ loginHandler Env {..} LoginCreds {..} =
         Left _ -> throwError err401
     else throwError err401
 
+resetHandler :: Env -> Handler NoContent
+resetHandler Env {..} =
+  liftIO (modifyMVar_ notesMvar $ const (pure [])) >> pure NoContent
+
 server :: Env -> Server API
 server env = loginHandler env :<|> notesServer
   where
@@ -97,6 +103,9 @@ server env = loginHandler env :<|> notesServer
     notesPrivateServer (Authenticated _) =
       createHandler env :<|> updateHandler env
     notesPrivateServer _ = throwAll err401
+
+testServer :: Env -> Server TestAPI
+testServer env = server env :<|> resetHandler env
 
 type API =
   "api" :> "login" :> ReqBody '[JSON] LoginCreds :> Post '[JSON] LoginResult
@@ -110,6 +119,17 @@ type NotesPrivateAPI =
   ReqBody '[JSON] AddNote :> Post '[JSON] Note
     :<|> Capture "id" Int :> ReqBody '[JSON] Note :> Put '[JSON] Note
 
+type TestAPI = API :<|> "api" :> "testing" :> "reset" :> PostNoContent
+
+data AppEnv = TestEnv | ProdEnv
+
+getAppEnv :: IO AppEnv
+getAppEnv = do
+  args <- getArgs
+  case args of
+    ["test"] -> return TestEnv
+    _ -> return ProdEnv
+
 mkApp :: IO Application
 mkApp = do
   jwtCfg <- fmap defaultJWTSettings generateKey
@@ -121,4 +141,9 @@ mkApp = do
             cookieXsrfSetting = Nothing
           }
       ctx = jwtCfg :. cookieCfg :. EmptyContext
-  return $ serveWithContext (Proxy :: Proxy API) ctx (server env)
+  appEnv <- getAppEnv
+  case appEnv of
+    TestEnv -> do
+      putStrLn "Running in test mode"
+      return $ serveWithContext (Proxy :: Proxy TestAPI) ctx (testServer env)
+    _ -> return $ serveWithContext (Proxy :: Proxy API) ctx (server env)

@@ -5,7 +5,7 @@ const NoteForm = ({ createNote }) => {
 
   const addNote = (event) => {
     event.preventDefault()
-    createNote({ content: newNote, important: false })
+    createNote({ content: newNote, important: true })
     setNewNote('')
   }
 
